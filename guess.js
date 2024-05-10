@@ -274,7 +274,6 @@ window.addEventListener("load", function() {
 
 
 
-
 let myWord = "Test";
 let ntries = 4;
 let nchecks = 1;
