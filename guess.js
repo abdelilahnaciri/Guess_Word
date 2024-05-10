@@ -364,6 +364,10 @@ let val = "";
 let inputsTry = document.querySelector(".inputs");
 let gameArea = document.querySelector(".game-area");
 let lvlTitle = document.createElement("h3");
+let msgCheck = document.querySelector(".message");
+let span = document.createElement("span");                    
+let state = document.createElement("h3");
+let btn = document.createElement("button");
 
 // window.addEventListener("load", function() {
 //     let inputs = document.querySelectorAll(".try");
@@ -403,7 +407,7 @@ let lvlTitle = document.createElement("h3");
 
 
 let level = 0;
-let myWords = ["Tests", "Okay", "Broski"];
+let myWords = ["Ahmed", "Abdel", "Karem", "Mery", "Nour"];
 // console.log(level);
 function allTests() {
     lvlTitle.textContent = `Level: ${level+1} / ${myWords.length}`;
@@ -453,7 +457,7 @@ function allTests() {
     let i = 1;
     checkbtn.addEventListener("click", function(e) {
         let res = "";
-            if (i <= ntries) {
+            if (i <= ntries && level < myWords.length) {
                 inputs[i-1].querySelectorAll("input").forEach(function(e) {
                     res += e.value;
                 });
@@ -481,14 +485,11 @@ function allTests() {
                             background-color: #27303f;`;
                         }
                     }
-                    let msgCheck = document.querySelector(".message");
                     // console.log(msgCheck);
-                    let span = document.createElement("span");
-                    
-                    let state = document.createElement("h3");
+                    state.innerHTML = '';
+                    span.innerHTML = '';
                     state.appendChild(span);
                     msgCheck.appendChild(state);
-                    let btn = document.createElement("button");
                     btn.textContent = "Got It";
                     msgCheck.appendChild(btn);
                     msgCheck.classList.add("active");
@@ -502,7 +503,7 @@ function allTests() {
                         state.innerHTML += "You Got The Right Word";
                         level++;
                         if (level < myWords.length) {
-                            window.addEventListener("load", allTests());
+                            document.addEventListener("load", allTests());
                         }
                         return ;
                     } else {
@@ -521,4 +522,6 @@ function allTests() {
         }
     });
 }
-window.addEventListener("load", allTests());
+if (level === 0) {
+    allTests();
+}
