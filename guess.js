@@ -276,11 +276,11 @@ window.addEventListener("load", function() {
 
 
 let myWord = "Test";
-let myWords = ["Test", "Okay", "Broski"];
 let ntries = 4;
 let nchecks = 1;
 let res = [];
 let val = "";
+
 // window.addEventListener("load", function() {
 //     let inputs = document.querySelectorAll(".try");
 //     if (nchecks < 4) {
@@ -362,22 +362,9 @@ let val = "";
 //     });
 // });
 
-let inputs = document.querySelector(".inputs");
-
-for (let i = 0; i < ntries; i++) {
-    let alltries = document.createElement("div");
-    alltries.className = "try";
-    let tryLabel = document.createElement("label");
-    tryLabel.textContent = `Try ${i+1}`;
-    alltries.appendChild(tryLabel);
-    // for (let s = 0; s < myWords.length; s++) {}
-    for (let j = 0; j < myWord.length; j++) {
-        let tryInput = document.createElement("input");
-        tryInput.type = "text";
-        alltries.appendChild(tryInput);
-    }
-    inputs.appendChild(alltries);
-}
+let inputsTry = document.querySelector(".inputs");
+let gameArea = document.querySelector(".game-area");
+let lvlTitle = document.createElement("h3");
 
 // window.addEventListener("load", function() {
 //     let inputs = document.querySelectorAll(".try");
@@ -416,12 +403,32 @@ for (let i = 0; i < ntries; i++) {
 // });
 
 
-window.addEventListener("load", function() {
+let level = 0;
+let myWords = ["Tests", "Okay", "Broski"];
+// console.log(level);
+function allTests() {
+    lvlTitle.textContent = `Level: ${level+1} / ${myWords.length}`;
+    gameArea.appendChild(lvlTitle);
+    inputsTry.innerHTML = '';
+    for (let i = 0; i < ntries; i++) {
+        let alltries = document.createElement("div");
+        alltries.className = "try";
+        let tryLabel = document.createElement("label");
+        tryLabel.textContent = `Try ${i+1}`;
+        alltries.appendChild(tryLabel);
+        // for (let s = 0; s < myWords.length; s++) {}
+        for (let j = 0; j < myWords[level].length; j++) {
+            let tryInput = document.createElement("input");
+            tryInput.type = "text";
+            alltries.appendChild(tryInput);
+        }
+        inputsTry.appendChild(alltries);
+    }
     let inputs = document.querySelectorAll(".try");
     let checkbtn = document.querySelector(".check");
     // console.log(inputs[0].querySelectorAll("input")[0]);
     for (let i = 1; i < ntries; i++) {
-        for (let j = 0; j < myWord.length; j++) {
+        for (let j = 0; j < myWords[level].length; j++) {
             inputs[i].querySelectorAll("input")[j].disabled = true;
         }
     }
@@ -430,14 +437,14 @@ window.addEventListener("load", function() {
         input.addEventListener("keyup", function(e) {
             let i = 1;
             let val = '';
-            for (i = 1; i <= myWord.length; i++) {
+            for (i = 1; i <= myWords[level].length; i++) {
                 if (input.children[i].value.trim().length > 0) {
                     input.children[i].style.cssText = `border-bottom-color: #e4c61b;`;
                     val = '';
                     val = input.children[i].value.trim().charAt(0);
                     input.children[i].value = val;
                     input.children[i].disabled = true;
-                    if (i < myWord.length) {
+                    if (i < myWords[level].length) {
                         input.children[i+1].focus();
                     }
                 }
@@ -457,12 +464,12 @@ window.addEventListener("load", function() {
                 //         inputs[i].querySelectorAll("input")[j].disabled = false;
                 //     }
                 // }
-                if (res.length === myWord.length) {
-                    for (let j = 0; j < myWord.length; j++) {
+                if (res.length === myWords[level].length) {
+                    for (let j = 0; j < myWords[level].length; j++) {
                         inputs[i-1].children[j+1].style.cssText = `
                         color: #fff; border-color: #999;
                         `;
-                        if (res.split("")[j] == myWord.split("")[j]) {
+                        if (res.split("")[j] == myWords[level].split("")[j]) {
                             inputs[i-1].children[j+1].style.cssText += `
                             background-color: #f89e13;`;
                         }
@@ -491,17 +498,21 @@ window.addEventListener("load", function() {
                         state.remove();
                         btn.remove();
                     })
-                    if (res === myWord) {
+                    if (res === myWords[level]) {
                         span.textContent = "Congrats!";
                         state.innerHTML += "You Got The Right Word";
+                        level++;
+                        if (level < myWords.length) {
+                            window.addEventListener("load", allTests());
+                        }
                         return ;
                     } else {
                         span.textContent = "Sorry!";
                         span.style.cssText = `color: #ff0159;`;
                         state.innerHTML += "Good Luck Next Time";
                     }
-                    for (let j = 0; j < myWord.length; j++) {
-                        if (res.length === myWord.length && i < ntries) {
+                    for (let j = 0; j < myWords[level].length; j++) {
+                        if (res.length === myWords[level].length && i < ntries) {
                             inputs[i].querySelectorAll("input")[j].disabled = false;
                         }
                     }
@@ -510,5 +521,5 @@ window.addEventListener("load", function() {
             // console.log(inputs[i].querySelectorAll("input"));
         }
     });
-    // console.log(inputs[1].querySelectorAll("input"));
-});
+}
+window.addEventListener("load", allTests());
