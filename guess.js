@@ -409,6 +409,7 @@ let level = 0;
 if (window.localStorage.getItem("level")) {
   level = window.localStorage.getItem("level");
 }
+let nhints;
 let ntries = 4;
 let myWords = ["Ahmed", "Abd", "Karem", "Mery", "Nour"];
 let hintNums = document.querySelector(".hint span");
@@ -416,7 +417,11 @@ let hintNums = document.querySelector(".hint span");
 hintNums.style.paddingRight = "5px";
 // console.log(level);
 function allTests() {
-  let nhints = myWords[level].length;
+  if (myWords[level]) {
+    nhints = myWords[level].length;
+  } else {
+    return;
+  }
   hintNums.textContent = nhints;
   hintBtn.disabled = false;
   lvlTitle.textContent = `Level: ${Number(level) + 1} / ${myWords.length}`;
