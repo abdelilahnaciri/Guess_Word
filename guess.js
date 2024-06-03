@@ -1,12 +1,13 @@
 let gameName = "Guess The Word";
 document.title = gameName;
 document.querySelector("h1").innerHTML = gameName;
-document.querySelector("footer").innerHTML = `${gameName} Game Created By Elzero`;
+document.querySelector(
+  "footer"
+).innerHTML = `${gameName} Game Created By Abdel Inspired from Elzero <3`;
 
 // Setting Up Inputs
 // let i = 4;
 // let j = 6;
-
 
 // document.addEventListener("keyup", function() {
 //     // let text = e.currentTarget;
@@ -25,7 +26,7 @@ document.querySelector("footer").innerHTML = `${gameName} Game Created By Elzero
 //     // }
 //     // inputText.forEach(function(e, index) {
 //     //     // console.log(e);
-        
+
 //     // })
 //     // if (inputText[0].value.length > 0) {
 //     //     inputText[1].focus();
@@ -272,13 +273,11 @@ window.addEventListener("load", function() {
 });
 */
 
+// let myWord = "Test";
 
-
-let myWord = "Test";
-let ntries = 4;
-let nchecks = 1;
-let res = [];
-let val = "";
+// let nchecks = 1;
+// let res = [];
+// let val = "";
 
 // window.addEventListener("load", function() {
 //     let inputs = document.querySelectorAll(".try");
@@ -356,7 +355,7 @@ let val = "";
 //                 }
 //             }
 //             // console.log(inputs[nchecks]);
-            
+
 //         }
 //     });
 // });
@@ -365,9 +364,10 @@ let inputsTry = document.querySelector(".inputs");
 let gameArea = document.querySelector(".game-area");
 let lvlTitle = document.createElement("h3");
 let msgCheck = document.querySelector(".message");
-let span = document.createElement("span");                    
+let span = document.createElement("span");
 let state = document.createElement("h3");
 let btn = document.createElement("button");
+let hintBtn = document.querySelector(".hint");
 
 // window.addEventListener("load", function() {
 //     let inputs = document.querySelectorAll(".try");
@@ -404,124 +404,186 @@ let btn = document.createElement("button");
 //     });
 //     // console.log(inputs[1].querySelectorAll("input"));
 // });
-
-
+// console.log(window.localStorage.getItem("level"));
 let level = 0;
-let myWords = ["Ahmed", "Abdel", "Karem", "Mery", "Nour"];
+if (window.localStorage.getItem("level")) {
+  level = window.localStorage.getItem("level");
+}
+let ntries = 4;
+let myWords = ["Ahmed", "Abd", "Karem", "Mery", "Nour"];
+let hintNums = document.querySelector(".hint span");
+
+hintNums.style.paddingRight = "5px";
 // console.log(level);
 function allTests() {
-    lvlTitle.textContent = `Level: ${level+1} / ${myWords.length}`;
-    gameArea.appendChild(lvlTitle);
-    inputsTry.innerHTML = '';
-    for (let i = 0; i < ntries; i++) {
-        let alltries = document.createElement("div");
-        alltries.className = "try";
-        let tryLabel = document.createElement("label");
-        tryLabel.textContent = `Try ${i+1}`;
-        alltries.appendChild(tryLabel);
-        // for (let s = 0; s < myWords.length; s++) {}
-        for (let j = 0; j < myWords[level].length; j++) {
-            let tryInput = document.createElement("input");
-            tryInput.type = "text";
-            alltries.appendChild(tryInput);
-        }
-        inputsTry.appendChild(alltries);
+  let nhints = myWords[level].length;
+  hintNums.textContent = nhints;
+  hintBtn.disabled = false;
+  lvlTitle.textContent = `Level: ${Number(level) + 1} / ${myWords.length}`;
+  gameArea.appendChild(lvlTitle);
+  inputsTry.innerHTML = "";
+  for (let i = 0; i < ntries; i++) {
+    let alltries = document.createElement("div");
+    alltries.className = "try";
+    let tryLabel = document.createElement("label");
+    tryLabel.textContent = `Try ${i + 1}`;
+    alltries.appendChild(tryLabel);
+    // for (let s = 0; s < myWords.length; s++) {}
+    for (let j = 0; j < myWords[level].length; j++) {
+      let tryInput = document.createElement("input");
+      tryInput.type = "text";
+      alltries.appendChild(tryInput);
     }
-    let inputs = document.querySelectorAll(".try");
-    let checkbtn = document.querySelector(".check");
-    // console.log(inputs[0].querySelectorAll("input")[0]);
-    for (let i = 1; i < ntries; i++) {
-        for (let j = 0; j < myWords[level].length; j++) {
-            inputs[i].querySelectorAll("input")[j].disabled = true;
-        }
+    inputsTry.appendChild(alltries);
+  }
+  let inputs = document.querySelectorAll(".try");
+  let checkbtn = document.querySelector(".check");
+  // console.log(inputs[0].querySelectorAll("input")[0]);
+  for (let i = 1; i < ntries; i++) {
+    for (let j = 0; j < myWords[level].length; j++) {
+      inputs[i].querySelectorAll("input")[j].disabled = true;
     }
+  }
 
-    inputs.forEach(function(input, index) {
-        input.addEventListener("keyup", function(e) {
-            let i = 1;
-            let val = '';
-            for (i = 1; i <= myWords[level].length; i++) {
-                if (input.children[i].value.trim().length > 0) {
-                    input.children[i].style.cssText = `border-bottom-color: #e4c61b;`;
-                    val = '';
-                    val = input.children[i].value.trim().charAt(0);
-                    input.children[i].value = val;
-                    input.children[i].disabled = true;
-                    if (i < myWords[level].length) {
-                        input.children[i+1].focus();
-                    }
-                }
-            }
-        })
-    });
-    let i = 1;
-    checkbtn.addEventListener("click", function(e) {
-        let res = "";
-            if (i <= ntries && level < myWords.length) {
-                inputs[i-1].querySelectorAll("input").forEach(function(e) {
-                    res += e.value;
-                });
-                // console.log(res);
-                // for (let j = 0; j < myWord.length; j++) {
-                //     if (res.length === myWord.length && i < ntries) {
-                //         inputs[i].querySelectorAll("input")[j].disabled = false;
-                //     }
-                // }
-                if (res.length === myWords[level].length) {
-                    for (let j = 0; j < myWords[level].length; j++) {
-                        inputs[i-1].children[j+1].style.cssText = `
-                        color: #fff; border-color: #999;
-                        `;
-                        if (res.split("")[j] == myWords[level].split("")[j]) {
-                            inputs[i-1].children[j+1].style.cssText += `
-                            background-color: #f89e13;`;
-                        }
-                        else if (myWord.includes(res.split("")[j])) {
-                            inputs[i-1].children[j+1].style.cssText += `
-                            background-color: #18ba89;`;
-                        }
-                        else {
-                            inputs[i-1].children[j+1].style.cssText += `
-                            background-color: #27303f;`;
-                        }
-                    }
-                    // console.log(msgCheck);
-                    state.innerHTML = '';
-                    span.innerHTML = '';
-                    state.appendChild(span);
-                    msgCheck.appendChild(state);
-                    btn.textContent = "Got It";
-                    msgCheck.appendChild(btn);
-                    msgCheck.classList.add("active");
-                    btn.addEventListener("click", function(e) {
-                        msgCheck.classList.remove("active");
-                        state.remove();
-                        btn.remove();
-                    })
-                    if (res === myWords[level]) {
-                        span.textContent = "Congrats!";
-                        state.innerHTML += "You Got The Right Word";
-                        level++;
-                        if (level < myWords.length) {
-                            document.addEventListener("load", allTests());
-                        }
-                        return ;
-                    } else {
-                        span.textContent = "Sorry!";
-                        span.style.cssText = `color: #ff0159;`;
-                        state.innerHTML += "Good Luck Next Time";
-                    }
-                    for (let j = 0; j < myWords[level].length; j++) {
-                        if (res.length === myWords[level].length && i < ntries) {
-                            inputs[i].querySelectorAll("input")[j].disabled = false;
-                        }
-                    }
-                    i++;
-                }
-            // console.log(inputs[i].querySelectorAll("input"));
+  inputs.forEach(function (input, index) {
+    input.addEventListener("keyup", function (e) {
+      let i = 1;
+      let val = "";
+      for (i = 1; i <= myWords[level].length; i++) {
+        if (input.children[i].value.trim().length > 0) {
+          input.children[i].style.cssText = `border-bottom-color: #e4c61b;`;
+          val = "";
+          val = input.children[i].value.trim().charAt(0);
+          input.children[i].value = val;
+          input.children[i].disabled = true;
+          if (i < myWords[level].length) {
+            input.children[i + 1].focus();
+          }
         }
+      }
     });
+  });
+  let i = 1;
+  checkbtn.addEventListener("click", function (e) {
+    let res = "";
+    msgCheck.innerHTML = "";
+    if (i <= ntries && level < myWords.length) {
+      console.log(i);
+      inputs[i - 1].querySelectorAll("input").forEach(function (e) {
+        res += e.value;
+      });
+      // console.log(res);
+      // for (let j = 0; j < myWord.length; j++) {
+      //     if (res.length === myWord.length && i < ntries) {
+      //         inputs[i].querySelectorAll("input")[j].disabled = false;
+      //     }
+      // }
+      if (res.length === myWords[level].length) {
+        // console.log(myWord);
+        for (let j = 0; j < myWords[level].length; j++) {
+          inputs[i - 1].children[j + 1].style.cssText = `
+					color: #fff; border-color: #999;
+					`;
+          if (res.split("")[j] == myWords[level].split("")[j]) {
+            inputs[i - 1].children[j + 1].style.cssText += `
+						background-color: #f89e13;`;
+          } else if (myWords[level].includes(res.split("")[j])) {
+            // console.log(myWord);
+            inputs[i - 1].children[j + 1].style.cssText += `
+            background-color: #18ba89;`;
+          } else {
+            inputs[i - 1].children[j + 1].style.cssText += `
+            background-color: #27303f;`;
+          }
+        }
+        if (
+          i == ntries &&
+          inputs[i - 1].children[myWords[level].length].style
+            .backgroundColor !== "rgb(248, 158, 19)"
+        ) {
+          window.location.reload();
+          console.log("finished");
+        }
+        // console.log(msgCheck);
+        state.innerHTML = "";
+        span.innerHTML = "";
+        state.appendChild(span);
+        msgCheck.appendChild(state);
+        btn.textContent = "Got It";
+        msgCheck.appendChild(btn);
+        msgCheck.classList.add("active");
+        btn.addEventListener("click", function (e) {
+          msgCheck.classList.remove("active");
+        });
+        if (res === myWords[level]) {
+          span.textContent = "Congrats!";
+          state.innerHTML += "You Got The Right Word";
+          level++;
+          if (myWords[level]) {
+            nhints = myWords[level].length;
+          }
+          hintNums.textContent = nhints;
+          hintNums.disabled = false;
+          window.localStorage.setItem("level", level);
+          if (level < myWords.length) {
+            window.location.reload();
+            // document.addEventListener("load", allTests());
+          }
+          return;
+        } else {
+          span.textContent = "Sorry!";
+          span.style.cssText = `color: #ff0159;`;
+          state.innerHTML += "Good Luck Next Time";
+        }
+        for (let j = 0; j < myWords[level].length; j++) {
+          if (res.length === myWords[level].length && i < ntries) {
+            inputs[i].querySelectorAll("input")[j].disabled = false;
+          }
+        }
+        i++;
+      }
+      // console.log(inputs[i].querySelectorAll("input"));
+    } else if (level === myWords.length) {
+      hintBtn.disabled = true;
+    }
+  });
+  hintBtn.addEventListener("click", function (e) {
+    console.log(hintNums);
+    nhints--;
+    hintNums.textContent = nhints;
+    if (nhints === 0) {
+      hintBtn.disabled = true;
+      hintBtn.style.backgroundColor = "#81a481";
+      msgCheck.classList.remove("active");
+    }
+    let arr = new Set();
+    for (let i = 0; i < myWords[level].length; i++) {
+      arr.add(myWords[level].charAt(Math.floor(Math.random() * 5)));
+    }
+    arr = [...arr];
+    console.log(arr);
+    msgCheck.innerHTML = "";
+    span.innerHTML = "";
+    state.innerHTML = "";
+    span.textContent = "Hint!";
+    state.appendChild(span);
+    state.innerHTML += "Chars Used Here Are: ";
+    msgCheck.appendChild(state);
+    for (let i = 0; i < arr.length; i++) {
+      let spn = document.createElement("span");
+      spn.classList.add("char");
+      spn.style.cssText = `display: inline-block; padding: 5px;`;
+      spn.textContent = arr[i];
+      msgCheck.appendChild(spn);
+      console.log(spn);
+    }
+    btn.textContent = "Got It";
+    btn.style.cssText = `display:block; margin: 0 auto;`;
+    msgCheck.appendChild(btn);
+    msgCheck.classList.add("active");
+    btn.addEventListener("click", function (e) {
+      msgCheck.classList.remove("active");
+    });
+  });
 }
-if (level === 0) {
-    allTests();
-}
+allTests();
