@@ -35,6 +35,10 @@ h1 {
         width: 100%;
         flex: 1;
         position: relative;
+        overflow: hidden;
+        @media (max-width: 769px) {
+            flex: none;
+        }
         .inputs .try {
             max-width: 100%;
             display: grid;
@@ -143,10 +147,11 @@ h1 {
         position: absolute;
         left: 50%;
         top: 50%;
-        transform: translate(-50%, -50%);
+        /* transform: translate(-50%, -50%); */
         box-shadow: 0 0 12px 0 rgb(0 0 0 / 45%);
         transition: var(--main-transition);
-        display: none;
+        /* display: none; */
+        transform: translate(-50%, 150%);
         span {
             display: block;
             margin-bottom: 20px;
@@ -169,8 +174,8 @@ h1 {
         }
     }
     .message.active {
-        display: block;
         width: 90%;
+        transform: translate(-50%, -50%);
     }
 }
 footer {
